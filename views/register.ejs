@@ -1,0 +1,38 @@
+<%- include('cabecera', {}); %>
+
+<body onload="actualizarReloj()">
+    <%- include('navegacion', {}); %>
+    <!--  -->
+    <main>
+        <form action="/register" method="POST" id="formularioRegistro">
+            <div class="mb-2">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" onblur="validarNombre()">
+                <div class="invalid-feedback">
+                    El nombre no puede estar vacío
+                </div>
+              </div>
+            <div class="mb-2">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" onblur="validarEmail()" required>
+                <div class="invalid-feedback">
+                    Dirección de email inválida
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" name="password" onblur="validarContraseña()" required>
+                <div class="invalid-feedback">
+                    La contraseña no puede estar vacía
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="registrarUsuario()">Registrarse</button>
+          </form>
+
+    </main>
+
+    <%- include('footer', {}); %>
+</body>
+
+
+</html>

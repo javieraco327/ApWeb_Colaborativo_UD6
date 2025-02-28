@@ -88,3 +88,25 @@ function validarFormulario(){
         alert("El formulario se ha validado correctamente y se puede enviar");
     }
 }
+
+// ######### Funciones para el registro y acceso de usuarios
+
+function validarContraseña (){
+    var nombre = document.getElementById('password').value;
+    if (nombre.length>0){
+        document.getElementById('password').classList.remove('is-invalid');
+        document.getElementById('password').classList.add('is-valid');
+        return true;
+    }
+    else {
+        document.getElementById('password').classList.remove('is-valid');
+        document.getElementById('password').classList.add('is-invalid');
+        return false;
+    }
+}
+function registrarUsuario(){
+    var formulario_valido = (validarEmail () && validarNombre() && validarContraseña())
+    if (formulario_valido){
+        document.getElementById('formularioRegistro').submit();
+    }
+}

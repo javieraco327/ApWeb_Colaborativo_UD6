@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
 let ejs = require('ejs');
 const aplicacion = express()
 const puerto = 8000
@@ -39,7 +40,7 @@ aplicacion.use(bodyParser.urlencoded({ extended: true }));
 // ########## SE DEFINE UNA FUNCION QUE LEE TODA LA BASE DE DATOS Y DEVUELVE UN DICCIONARIO CON LA LISTA DE PELICULAS, LISTA DE PREMIOS, LISTA DE USUARIOS Y USUARIO ACTIVO (SI HAY).
 // ESTE DICCIONARIO SE PASA COMO PARAMETRO A TODAS LAS PAGINAS, ADEMAS DE POSIBLES PARAMETROS ADICIONALES (COMO EL LISTADO DE NOTICIAS O EL DE COMENTARIOS) 
 
-function leerDatosComunes (){
+async function leerDatosComunes (){
   let listaPeliculas = [
     {
     'id':1,
@@ -65,37 +66,73 @@ function leerNoticias(){
 
 
 // ########## SE DEFINEN LAS RUTAS. 
-aplicacion.get('/', (req, res) => {
-  let parametrosComunes=leerDatosComunes();
+aplicacion.get('/', async (req, res) => {
+  let parametrosComunes= await leerDatosComunes();
   let noticias = leerNoticias();
   res.render('portada',{'parametrosComunes':parametrosComunes, 'noticias':noticias});
 })
-aplicacion.get('/peliculas/', (req, res) => {
-  let parametrosComunes=leerDatosComunes();
+aplicacion.get('/peliculas/', async (req, res) => {
+  let parametrosComunes= await leerDatosComunes();
   res.render('peliculas',{'parametrosComunes':parametrosComunes});
 })
-aplicacion.get('/premios/', (req, res) => {
-  let parametrosComunes=leerDatosComunes();
+aplicacion.get('/premios/', async (req, res) => {
+  let parametrosComunes= await leerDatosComunes();
   res.render('premios',{'parametrosComunes':parametrosComunes});
 })
-aplicacion.get('/contacto/', (req, res) => {
-  let parametrosComunes=leerDatosComunes();
+aplicacion.get('/contacto/', async (req, res) => {
+  let parametrosComunes= await leerDatosComunes();
   res.render('contacto',{'parametrosComunes':parametrosComunes});
 })
-aplicacion.get('/accesibilidad/', (req, res) => {
-  let parametrosComunes=leerDatosComunes();
+aplicacion.get('/accesibilidad/', async (req, res) => {
+  let parametrosComunes= await leerDatosComunes();
   res.render('accesibilidad',{'parametrosComunes':parametrosComunes});
 })
-aplicacion.get('/legal/', (req, res) => {
-  let parametrosComunes=leerDatosComunes();
+aplicacion.get('/legal/', async (req, res) => {
+  let parametrosComunes= await leerDatosComunes();
   res.render('legal',{'parametrosComunes':parametrosComunes});
 })
-aplicacion.get('/pelicula/:idPelicula', (req, res) => {
-  let parametrosComunes=leerDatosComunes();
+aplicacion.get('/pelicula/:idPelicula', async (req, res) => {
+  let parametrosComunes= await leerDatosComunes();
   let idPelicula= req.params['idPelicula'];
   let comentarios = leerComentarios(idPelicula);
   res.render('detalles_pelicula',{'parametrosComunes':parametrosComunes, 'idPelicula':idPelicula, 'comentarios':comentarios});
 })
+// # Rutas especificas de registro y autenticacion
+aplicacion.get('/register', async (req, res) => {
+  let parametrosComunes= await leerDatosComunes();
+  res.render('register',{'parametrosComunes':parametrosComunes});
+})
+aplicacion.post('/register', async (req, res) => {
+  let resultado = await client.db("ASWGrupo1").collection('usuarios').find({'email':req.body['email']}).toArray();
+  if (resultado.length == 0) {
+    bcrypt.hash(req.body['password'], 10, async function(err, hash) {
+      let usuario = { 'nombre':req.body['nombre'], 'email':req.body['email'], 'password': hash};
+      idUsuario = await client.db("ASWGrupo1").collection('usuarios').insertOne(usuario).toString()
+      res.send('registrado')
+    });
+  }
+  else {
+    res.send('Email duplicado')
+  }
+})
+aplicacion.get('/login', async (req, res) => {
+  let parametrosComunes= await leerDatosComunes();
+  res.render('login',{'parametrosComunes':parametrosComunes});
+})
+aplicacion.post('/login', async (req, res) => {
+  // Procesar el login
+  res.send('logeado');
+})
+aplicacion.post('/logout', async (req, res) => {
+  // Procesar el logout
+  res.send('adios');
+})
+aplicacion.get('/prueba', async (req, res) => { // Una ruta para ejecutar peticiones de prueba a la base de datos
+  //resultado = await client.db("ASWGrupo1").collection('usuarios').drop()
+  resultado = await client.db("ASWGrupo1").collection('usuarios').find({}).toArray();
+  res.send(resultado);
+})
+
 
 // ########## SE ARRANCA EL SERVIDOR
 aplicacion.listen(puerto, () => {
