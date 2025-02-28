@@ -16,19 +16,15 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
+
+try {
+  client.connect();
+  console.log("Conectado a MongoDB");
 }
-run().catch(console.dir);
+catch {
+  console.log("Error de conexion a MongoDB");
+  process.kill();
+}
 
 // ########## SE DEFINE EL SISTEMA DE PLANTILLAS Y EL DIRECTORIO DONDE SE GUARDAN
 aplicacion.set('view engine', 'ejs')
