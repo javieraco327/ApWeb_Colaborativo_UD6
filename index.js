@@ -4,6 +4,32 @@ let ejs = require('ejs');
 const aplicacion = express()
 const puerto = 8000
 
+// ########## SE ESTABLECE CONEXION CON MONGODB
+
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://ASWGrupo1:ASWGrupo1@aswgrupo1.yods9.mongodb.net/?retryWrites=true&w=majority&appName=ASWGrupo1";
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+async function run() {
+  try {
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
+}
+run().catch(console.dir);
+
 // ########## SE DEFINE EL SISTEMA DE PLANTILLAS Y EL DIRECTORIO DONDE SE GUARDAN
 aplicacion.set('view engine', 'ejs')
 aplicacion.set('views', './views')
