@@ -1,4 +1,5 @@
 const express = require('express')
+const bodyParser = require('body-parser');
 let ejs = require('ejs');
 const aplicacion = express()
 const puerto = 8000
@@ -9,6 +10,9 @@ aplicacion.set('views', './views')
 
 // ########## SE DEFINE UN DIRECTORIO PARA CONTENIDO ESTATICO (IMAGENES, CSS....) Y ASI SE EVITA TENER QUE CREAR RUTAS PARA TODO. Las rutas se toman con respecto a ese directorio.
 aplicacion.use(express.static(__dirname + '/static'))
+
+// ########## SE USA bodyParser COMO MIDDLEWARE PARA PODER RECIBIR LOS DATOS DE LOS FORMULARIOS
+aplicacion.use(bodyParser.urlencoded({ extended: true }));
 
 // ########## SE DEFINE UNA FUNCION QUE LEE TODA LA BASE DE DATOS Y DEVUELVE UN DICCIONARIO CON LA LISTA DE PELICULAS, LISTA DE PREMIOS, LISTA DE USUARIOS Y USUARIO ACTIVO (SI HAY).
 // ESTE DICCIONARIO SE PASA COMO PARAMETRO A TODAS LAS PAGINAS, ADEMAS DE POSIBLES PARAMETROS ADICIONALES (COMO EL LISTADO DE NOTICIAS O EL DE COMENTARIOS) 
