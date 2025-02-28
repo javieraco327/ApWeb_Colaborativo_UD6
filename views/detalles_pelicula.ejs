@@ -1,0 +1,73 @@
+<%- include('cabecera', {}); %>
+
+<body onload="actualizarReloj()">
+    <%- include('navegacion', {}); %>
+    <!--  -->    
+    <main>
+        <div class="pelicula row">
+            <div class="row">
+                <div class="pelicula_detalles col-8 col-print-9">
+                    <div class="row">
+                        <div class="pelicula_dato_key col">Título</div>
+                        <div class="pelicula_dato_value col">Mufasa: El rey león</div>
+                    </div>
+                    <div class="row">
+                        <div class="pelicula_dato_key col">Año</div>
+                        <div class="pelicula_dato_value col">2024</div>
+                    </div>
+                    <div class="row">
+                        <div class="pelicula_dato_key col">Director</div>
+                        <div class="pelicula_dato_value col">Barry Jenkins</div>
+                    </div>
+                    <div class="row">
+                        <div class="pelicula_dato_key col">País</div>
+                        <div class="pelicula_dato_value col">Estados Unidos</div>
+                    </div>
+                    <div class="row">
+                        <div class="pelicula_dato_key col">Duración</div>
+                        <div class="pelicula_dato_value col">120 min</div>
+                    </div>
+                    <div class="row">
+                        <div class="pelicula_dato_key col">Premios en ediciones anteriores</div>
+                        <div class="pelicula_dato_value col">
+                            <table>
+                                <thead>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2024</td>
+                                        <td>Mejor banda sonora</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2024</td>
+                                        <td>Mejor guión</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-primary" onclick="window.print();">Imprimir</button>
+                    </div>
+
+                </div>
+                <div class="pelicula_cartelera col-4 col-print-3">
+                    <img src="../carteleras/1.jpg" class="cartelera" alt="Mufasa: El rey león">
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <section>
+                        <h2>Sinopsis</h2>
+                        <p>Rafiki, Timón y Pumba le cuentan la leyenda de Mufasa a la joven cachorro de león Kiara, hija de Simba y Nala. La historia se cuenta en flashbacks y presenta a Mufasa como un cachorro huérfano, perdido y solo hasta que conoce a un simpático león llamado Taka, heredero de un linaje real. Este encuentro casual pone en marcha un viaje de un extraordinario grupo de inadaptados que buscan su destino. Y sus vínculos se pondrán a prueba mientras trabajan juntos para escapar de un enemigo amenazador y letal. Precuela de 'El rey león' (2019).</p>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <%- include('footer', {}); %>
+</body>
+
+</html>

@@ -1,0 +1,42 @@
+<%- include('cabecera', {}); %>
+
+<body onload="actualizarReloj()">
+    <%- include('navegacion', {}); %>
+    <!--  -->
+    <main>
+        <form>
+            <div class="mb-2">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre" onblur="validarNombre()">
+                <div class="invalid-feedback">
+                    El nombre no puede estar vacío
+                </div>
+              </div>
+            <div class="mb-2">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" onblur="validarEmail()" required>
+                <div class="invalid-feedback">
+                    Dirección de email inválida
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="mensaje" class="form-label">Tu mensaje</label>
+                <textarea class="form-control" id="mensaje" rows="5" cols="30" onblur="validarMensaje()" oninput="contarPalabras()"></textarea>
+                <div class="invalid-feedback">
+                    El mensaje no puede estar vacío
+                </div>
+                <div class="contadorPalabras">
+                    Palabras: <span id="palabras">0</span>
+                </div>
+
+            </div>
+            <button type="button" class="btn btn-primary" onclick="validarFormulario()">Submit</button>
+          </form>
+
+    </main>
+
+    <%- include('footer', {}); %>
+</body>
+
+
+</html>

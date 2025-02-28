@@ -1,0 +1,91 @@
+<%- include('cabecera', {}); %>
+
+<body onload="actualizarReloj()">
+    <%- include('navegacion', {}); %>
+    <!--  -->
+    <main>
+        <section>
+            <header>
+                <h2>Listado de premios</h2>
+            </header>
+            <table class="table table-striped table-hover table-bordered" id="tabla_premios">
+                <caption>Tabla de premios de ediciones anteriores</caption>
+                <thead>
+                    <tr>
+                        <th>Año</th>
+                        <th>Premio</th>
+                        <th>Título</th>
+                        <th>Director</th>
+                        <th>País</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Peliculas 2024 -->
+                    <tr class="ano">
+                        <th rowspan="3">2024</th>
+                        <td>Mejor guión</td>
+                        <td>Mufasa: El rey león</td>
+                        <td>Barry Jenkins</td>
+                        <td>Estados Unidos</td>
+                    </tr>
+                    <tr>
+                        <td>Mejor banda sonora</td>
+                        <td>Mufasa: El rey león</td>
+                        <td>Barry Jenkins</td>
+                        <td>Estados Unidos</td>
+                    </tr>
+                    <tr>
+                        <td>Mejor vestuario</td>
+                        <td>Gladiator II</td>
+                        <td>Ridley Scott</td>
+                        <td>Estados Unidos</td>
+                    </tr>
+                    <!-- Peliculas 2023 -->
+                    <tr class="ano">
+                        <th rowspan="3">2023</th>
+                        <td>Mejor guión</td>
+                        <td>Oppenheimmer</td>
+                        <td>Christopher Nolan</td>
+                        <td>Estados Unidos</td>
+                    </tr>
+                    <tr>
+                        <td>Mejor banda sonora</td>
+                        <td>Barbie</td>
+                        <td>Greta Gerwig</td>
+                        <td>Estados Unidos</td>
+                    </tr>
+                    <tr>
+                        <td>Mejor vestuario</td>
+                        <td>Barbie</td>
+                        <td>Greta Gerwig</td>
+                        <td>Estados Unidos</td>
+                    </tr>
+                    <!-- Peliculas 2022 -->
+                    <tr class="ano">
+                        <th rowspan="3">2022</th>
+                        <td>Mejor guión</td>
+                        <td>Los Fabelman</td>
+                        <td>Steven Spielberg</td>
+                        <td>Estados Unidos</td>
+                    </tr>
+                    <tr>
+                        <td>Mejor banda sonora</td>
+                        <td>Top Gun: Maverick</td>
+                        <td>Joseph Kosinski</td>
+                        <td>Estados Unidos</td>
+                    </tr>
+                    <tr>
+                        <td>Mejor vestuario</td>
+                        <td>El regreso de las golondrinas</td>
+                        <td>Li Ruijun</td>
+                        <td>China</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <%- include('footer', {}); %>
+</body>
+
+</html>

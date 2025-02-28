@@ -1,0 +1,234 @@
+
+
+html {
+    font-size: 100%;
+}
+
+
+body {
+    margin: 0;
+    margin-bottom: 4em;
+}
+
+/* BARRA DE NAVEGACION */
+
+@media only screen and (min-width: 769px) {
+    .dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0; /* remove the gap so it doesn't close */
+    }
+}
+
+.nav-item {
+    font-family: Copperplate, Papyrus, fantasy;
+}
+
+
+/* BANNER */
+.banner-container{
+    margin:0;
+    padding:0;
+    left:0;
+    overflow: hidden;
+    position: relative;
+}
+
+.banner-image {
+    opacity: 0.4;
+    position: absolute;
+    left:0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: sepia(1);
+
+}
+.banner-text{
+    font-family: Copperplate, Papyrus, fantasy;
+    font-size: 1.5em;
+    position: relative;
+    text-align: center;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px salmon;
+    color: rgb(102, 53, 48);
+}
+
+.banner-text h1 {
+    margin:0;
+    padding:0
+}
+
+/* CAROUSEL */
+.carousel-caption {
+    position: relative;
+    left:0;
+    right:0;
+    bottom: 0;
+}
+
+#carouselPeliculas img{
+    width: 30%;
+}
+
+/* MAIN */
+
+
+main {
+    max-width: 80%;
+    margin: auto;
+    margin-top: 2em;
+}
+
+main section {
+    margin-bottom: 2em;
+}
+
+main section h2{
+    font-family: Copperplate, Papyrus, fantasy;
+    font-weight: normal;
+    text-align:center;
+    background-color: bisque;
+}
+
+
+.container-noticias img{
+    width: 80%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.container-noticias article{
+    text-align:justify;   
+}
+
+/* PATROCINADORES */
+.patrocinadores {
+    display:flex;
+    flex-wrap: wrap;
+}
+
+.patrocinadores div {
+    margin:10px
+}
+
+.patrocinadores img{
+    height: 50px;
+    padding: 10px;
+}
+
+/* FOOTER */
+address {
+    margin-bottom: 0;
+}
+
+footer {
+    text-align: center;
+    background-color: lightgrey;
+    padding: 0.5em;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+footer a{
+    color: #212529;
+}
+
+/* LISTA DE PELICULAS */
+
+.container-peliculas img{
+    width: 80%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.lista_pelicula {
+    text-align: center;
+}
+
+img.cartelera{
+    width:90%;
+    margin:auto;
+}
+
+/* DETALLES DE PELICULA */
+
+.pelicula_cartelera {
+    margin:auto;
+    padding:0;
+    display: inline-block;
+    text-align: center;
+    vertical-align:top;
+}
+
+.pelicula_detalles {
+    margin:auto;
+    padding-top:1em;
+    padding-bottom:1em;
+    display: inline-block;
+    vertical-align: top;
+    border: 1px solid grey;
+    border-radius: 5px;
+}
+.pelicula_dato{
+    padding-bottom: 0.7em;
+}
+
+.pelicula_dato_key {
+    font-family: Copperplate, Papyrus, fantasy;
+    display: inline-block;
+    text-align: right;
+    font-weight:normal;
+    vertical-align: top;
+}
+.pelicula_dato_value {
+    padding-left: 1.5em;
+    display: inline-block;
+    text-align: justify;
+}
+
+@page {
+    size: A4;
+    margin: 0;
+  }
+
+@media print { 
+    .col-print-3 {
+        width : 25%;
+    }
+
+    .col-print-9{
+        width: 75%;
+    }
+
+}
+
+/* LISTADO DE PREMIOS */
+#tabla_premios{
+    vertical-align: middle;
+    --bs-table-hover-bg: bisque;
+}
+
+#tabla_premios caption{
+    font-style: italic;
+    color: grey;
+    font-size: 0.8em;
+}
+
+/* OTRAS COSAS */
+.btn-primary {
+    --bs-btn-bg: bisque;
+    --bs-btn-color: black;
+    --bs-btn-border-color: grey;
+    font-family: Copperplate, Papyrus, fantasy;
+}
+
+.contadorPalabras{
+    font-style: italic;
+    color: grey;
+    font-size: 0.8em;
+}
+

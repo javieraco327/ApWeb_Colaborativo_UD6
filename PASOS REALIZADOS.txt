@@ -1,0 +1,156 @@
+################ 1 - Se instala el software Node.js
+
+################ 2 - Se crea el directorio de trabajo y se inicializa el archivo "package.json"
+sh-3.2$
+sh-3.2$ mkdir ApWeb_Colaborativo_UD6
+sh-3.2$ cd ApWeb_Colaborativo_UD6/
+sh-3.2$ npm init
+This utility will walk you through creating a package.json file.
+It only covers the most common items, and tries to guess sensible defaults.
+
+See `npm help init` for definitive documentation on these fields
+and exactly what they do.
+
+Use `npm install <pkg>` afterwards to install a package and
+save it as a dependency in the package.json file.
+
+Press ^C at any time to quit.
+package name: (apweb_colaborativo_ud6)
+version: (1.0.0)
+description: Trabajo colaborativo de la UD6
+entry point: (index.js)
+test command:
+git repository:
+keywords:
+author:
+license: (ISC)
+About to write to /Users/pilar/ApWeb_Colaborativo_UD6/package.json:
+
+{
+  "name": "apweb_colaborativo_ud6",
+  "version": "1.0.0",
+  "description": "Trabajo colaborativo de la UD6",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
+
+
+Is this OK? (yes)
+
+sh-3.2$ cat package.json
+{
+  "name": "apweb_colaborativo_ud6",
+  "version": "1.0.0",
+  "description": "Trabajo colaborativo de la UD6",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
+sh-3.2$
+
+################ 3 - Se instalan Express, bcrypt y jsonwebtoken (bcrypt y jsonwebtoken se usaran en la parte de usuarios)
+
+sh-3.2$ npm install express bcrypt jsonwebtoken
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated npmlog@5.0.1: This package is no longer supported.
+npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated are-we-there-yet@2.0.0: This package is no longer supported.
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm warn deprecated gauge@3.0.2: This package is no longer supported.
+
+added 141 packages, and audited 142 packages in 5s
+
+17 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+sh-3.2$ cat package.json
+{
+  "name": "apweb_colaborativo_ud6",
+  "version": "1.0.0",
+  "description": "Trabajo colaborativo de la UD6",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
+sh-3.2$
+
+################ 4 - Se crea el archivo index.js con la informacion basica (Hello world)
+sh-3.2$ cat index.js
+const express = require('express')
+const aplicacion = express()
+const puerto = 8000
+
+aplicacion.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+aplicacion.listen(puerto, () => {
+  console.log(`La aplicacion corre en el puerto ${puerto}`)
+})
+
+################ 5 - Se arranca el servidor
+sh-3.2$ node index.js
+La aplicacion corre en el puerto 8000
+
+################ 6 - Al acceder con un navegador a http://localhost:8000 se recibe el mensaje Hello World
+
+################ 7 - Se pasa a convertir la pagina vieja a node.js. Se utiliza el sistema de plantillas EJS
+
+sh-3.2$ npm install ejs
+
+added 12 packages, and audited 154 packages in 649ms
+
+19 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+sh-3.2$ cat package.json
+{
+  "name": "apweb_colaborativo_ud6",
+  "version": "1.0.0",
+  "description": "Trabajo colaborativo de la UD6",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
+sh-3.2$
+
+################ 8
+LLEGADOS A ESTE PUNTO, SE CONVIERTE CADA HTML DE LA PAGINA VIEJA EN UNA PLANTILLA EJS Y SE CREA EL ENRUTAMIENTO EN INDEX.JS
+EL MENU DE NAVEGACION Y EL FOOTER SE INCLUYEN COMO PLANTILLAS INDEPENDIENTES, PARA PODER MODIFICARLOS EN TIEMPO REAL.
+
+COMO LOS PARAMETROS SE PASAN A LAS PLANTILLAS, SE PUEDEN USAR DINAMICAMENTE. POR EJEMPLO, EN EL MENU DE NAVEGACION EL LISTADO DE PELICULAS SE PUEDE HACER CON:
+                            <% for (let pelicula of parametrosComunes['listaPeliculas']) { %>
+                                <li><a class="nav-link" href="/pelicula/<%= pelicula['id']%>"><%= pelicula['titulo']%></a></li>
+                            <% } %>
+
+<% %> Indica codigo a ejecutar en la PLANTILLA
+<%= %> Se usa para imprimir informacion
+
+HASTA AHORA, LAS CARTELERAS SE GUARDABAN EN EL PROPIO DIRECTORIO Y SE CARGABAN DE FORMA ESTATICA, PERO SI SE VA A PODER AÑADIR PELICULAS, MEJOR USAR EL ENLACE AL ORIGEN.
