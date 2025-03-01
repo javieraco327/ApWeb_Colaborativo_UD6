@@ -119,21 +119,23 @@ aplicacion.get('/pelicula/:idPelicula', async (req, res) => {
 // # Rutas especificas de registro y autenticacion
 aplicacion.get('/register', async (req, res) => {
   let parametrosComunes= await leerDatosComunes(req);
-  res.render('register',{'parametrosComunes':parametrosComunes});
+  res.render('register',{'parametrosComunes':parametrosComunes, 'emailDuplicado':false});
 })
 aplicacion.post('/register', async (req, res) => {
   // Primero se comprueba que el email no este ya registrado 
-  let resultado = await client.db("ASWGrupo1").collection('usuarios').find({'email':req.body['email']}).toArray();
-  if (resultado.length == 0) {
+  let resultado = await client.db("ASWGrupo1").collection('usuarios').findOne({'email':req.body['email']});
+  if (resultado == null) {
     // Se encripta la contraseña y se guarda
-    bcrypt.hash(req.body['password'], 10, async function(err, hash) {
-      let usuario = { 'nombre':req.body['nombre'], 'email':req.body['email'], 'password': hash};
-      idUsuario = await client.db("ASWGrupo1").collection('usuarios').insertOne(usuario).toString()
-      res.send('registrado')
-    });
+    hash = await bcrypt.hash(req.body['password'], 10)
+    usuario = { 'nombre':req.body['nombre'], 'email':req.body['email'], 'password': hash};
+    let resultado = await client.db("ASWGrupo1").collection('usuarios').insertOne(usuario);
+    let token = jwt.sign({ 'userId': resultado.insertedId.toString()  }, jwtKey, { expiresIn: '7d'});
+    res.cookie ('ASWGrupo1',token)
+    res.redirect ('/')
   }
   else {
-    res.send('Email duplicado')
+    let parametrosComunes= await leerDatosComunes(req);
+    res.render('register',{'parametrosComunes':parametrosComunes, 'emailDuplicado':true});
   }
 })
 aplicacion.get('/login', async (req, res) => {
