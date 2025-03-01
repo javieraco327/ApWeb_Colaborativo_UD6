@@ -110,3 +110,10 @@ function registrarUsuario(){
         document.getElementById('formularioRegistro').submit();
     }
 }
+
+function loginUsuario(){
+    var formulario_valido = (validarEmail () && validarContraseña())
+    if (formulario_valido){
+        document.getElementById('formularioLogin').submit();
+    }
+}

@@ -1,6 +1,8 @@
 const express = require('express')
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const cookieParser = require("cookie-parser");
 let ejs = require('ejs');
 const aplicacion = express()
 const puerto = 8000
@@ -34,22 +36,40 @@ aplicacion.set('views', './views')
 // ########## SE DEFINE UN DIRECTORIO PARA CONTENIDO ESTATICO (IMAGENES, CSS....) Y ASI SE EVITA TENER QUE CREAR RUTAS PARA TODO. Las rutas se toman con respecto a ese directorio.
 aplicacion.use(express.static(__dirname + '/static'))
 
-// ########## SE USA bodyParser COMO MIDDLEWARE PARA PODER RECIBIR LOS DATOS DE LOS FORMULARIOS
+// ########## SE USA bodyParser COMO MIDDLEWARE PARA PODER RECIBIR LOS DATOS DE LOS FORMULARIOS Y cookie-parser PARA LAS COOKIES
 aplicacion.use(bodyParser.urlencoded({ extended: true }));
+aplicacion.use(cookieParser())
+
+// ########## SE GENERA UNA CLAVE ALEATORIA PARA FIRMAR LOS JWT
+jwtKey = require('node:crypto').randomBytes(8).toString('hex')
 
 // ########## SE DEFINE UNA FUNCION QUE LEE TODA LA BASE DE DATOS Y DEVUELVE UN DICCIONARIO CON LA LISTA DE PELICULAS, LISTA DE PREMIOS, LISTA DE USUARIOS Y USUARIO ACTIVO (SI HAY).
 // ESTE DICCIONARIO SE PASA COMO PARAMETRO A TODAS LAS PAGINAS, ADEMAS DE POSIBLES PARAMETROS ADICIONALES (COMO EL LISTADO DE NOTICIAS O EL DE COMENTARIOS) 
 
-async function leerDatosComunes (){
+function autenticarUsuario(req){
+  if (req.cookies['ASWGrupo1']==null) { return -1}
+  try {
+    tokenData = jwt.verify(req.cookies['ASWGrupo1'], jwtKey);
+    return tokenData['userId']
+  }
+  catch { // Clave incorrecta o token invalido
+    return -1
+  }
+
+}
+
+
+async function leerDatosComunes (req){
   let listaPeliculas = [
     {
     'id':1,
     'titulo': 'titulo de prueba'
     },
   ]
-  let listaUsuarios = [];
+  let listaUsuarios = await client.db("ASWGrupo1").collection('usuarios').find({}).toArray();
+  console.log(listaUsuarios);
   let listaPremios = [];
-  let usuarioActivo = -1;
+  let usuarioActivo = autenticarUsuario(req);
   parametrosComunes = {'listaPeliculas':listaPeliculas, 'listaUsuarios':listaUsuarios, 'listaPremios':listaPremios, 'usuarioActivo':usuarioActivo};
   return parametrosComunes;
 }
@@ -67,44 +87,46 @@ function leerNoticias(){
 
 // ########## SE DEFINEN LAS RUTAS. 
 aplicacion.get('/', async (req, res) => {
-  let parametrosComunes= await leerDatosComunes();
+  let parametrosComunes= await leerDatosComunes(req);
   let noticias = leerNoticias();
   res.render('portada',{'parametrosComunes':parametrosComunes, 'noticias':noticias});
 })
 aplicacion.get('/peliculas/', async (req, res) => {
-  let parametrosComunes= await leerDatosComunes();
+  let parametrosComunes= await leerDatosComunes(req);
   res.render('peliculas',{'parametrosComunes':parametrosComunes});
 })
 aplicacion.get('/premios/', async (req, res) => {
-  let parametrosComunes= await leerDatosComunes();
+  let parametrosComunes= await leerDatosComunes(req);
   res.render('premios',{'parametrosComunes':parametrosComunes});
 })
 aplicacion.get('/contacto/', async (req, res) => {
-  let parametrosComunes= await leerDatosComunes();
+  let parametrosComunes= await leerDatosComunes(req);
   res.render('contacto',{'parametrosComunes':parametrosComunes});
 })
 aplicacion.get('/accesibilidad/', async (req, res) => {
-  let parametrosComunes= await leerDatosComunes();
+  let parametrosComunes= await leerDatosComunes(req);
   res.render('accesibilidad',{'parametrosComunes':parametrosComunes});
 })
 aplicacion.get('/legal/', async (req, res) => {
-  let parametrosComunes= await leerDatosComunes();
+  let parametrosComunes= await leerDatosComunes(req);
   res.render('legal',{'parametrosComunes':parametrosComunes});
 })
 aplicacion.get('/pelicula/:idPelicula', async (req, res) => {
-  let parametrosComunes= await leerDatosComunes();
+  let parametrosComunes= await leerDatosComunes(req);
   let idPelicula= req.params['idPelicula'];
   let comentarios = leerComentarios(idPelicula);
   res.render('detalles_pelicula',{'parametrosComunes':parametrosComunes, 'idPelicula':idPelicula, 'comentarios':comentarios});
 })
 // # Rutas especificas de registro y autenticacion
 aplicacion.get('/register', async (req, res) => {
-  let parametrosComunes= await leerDatosComunes();
+  let parametrosComunes= await leerDatosComunes(req);
   res.render('register',{'parametrosComunes':parametrosComunes});
 })
 aplicacion.post('/register', async (req, res) => {
+  // Primero se comprueba que el email no este ya registrado 
   let resultado = await client.db("ASWGrupo1").collection('usuarios').find({'email':req.body['email']}).toArray();
   if (resultado.length == 0) {
+    // Se encripta la contraseña y se guarda
     bcrypt.hash(req.body['password'], 10, async function(err, hash) {
       let usuario = { 'nombre':req.body['nombre'], 'email':req.body['email'], 'password': hash};
       idUsuario = await client.db("ASWGrupo1").collection('usuarios').insertOne(usuario).toString()
@@ -116,21 +138,37 @@ aplicacion.post('/register', async (req, res) => {
   }
 })
 aplicacion.get('/login', async (req, res) => {
-  let parametrosComunes= await leerDatosComunes();
-  res.render('login',{'parametrosComunes':parametrosComunes});
+  let parametrosComunes= await leerDatosComunes(req);
+  res.render('login',{'parametrosComunes':parametrosComunes, errorLogin:false});
 })
 aplicacion.post('/login', async (req, res) => {
-  // Procesar el login
-  res.send('logeado');
+  // Se busca el email en la base de datos de usuarios
+  let resultado = await client.db("ASWGrupo1").collection('usuarios').findOne({'email':req.body['email']});
+  if (resultado == null) {
+    let parametrosComunes= await leerDatosComunes(req);
+    res.render('login',{'parametrosComunes':parametrosComunes, errorLogin:true});
+  }
+  else {
+    bcrypt.compare(req.body['password'], resultado['password'], async function(err, result) {
+      if (result == true) {
+        const token = jwt.sign({ 'userId': resultado['_id'].toString() }, jwtKey, { expiresIn: '7d'});
+        res.cookie ('ASWGrupo1',token)
+        res.redirect ('/')
+      }
+      else {
+        let parametrosComunes= await leerDatosComunes(req);
+        res.render('login',{'parametrosComunes':parametrosComunes, errorLogin:true});
+      }
+    });
+  }
 })
 aplicacion.post('/logout', async (req, res) => {
   // Procesar el logout
   res.send('adios');
 })
-aplicacion.get('/prueba', async (req, res) => { // Una ruta para ejecutar peticiones de prueba a la base de datos
+aplicacion.get('/prueba', async (req, res) => { // Una ruta para ejecutar peticiones de prueba a la base de datos. Habra que quitarla al final
   //resultado = await client.db("ASWGrupo1").collection('usuarios').drop()
-  resultado = await client.db("ASWGrupo1").collection('usuarios').find({}).toArray();
-  res.send(resultado);
+  res.send('listo');
 })
 
 

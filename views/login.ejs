@@ -1,0 +1,32 @@
+<%- include('cabecera', {}); %>
+
+<body onload="actualizarReloj()">
+    <%- include('navegacion', {}); %>
+    <!--  -->
+    <main>
+        <form action="/login" method="POST" id="formularioLogin">
+            <div class="mb-2">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" onblur="validarEmail()" required>
+                <div class="invalid-feedback">
+                    Dirección de email inválida
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" name="password" onblur="validarContraseña()" required>
+                <div class="invalid-feedback">
+                    La contraseña no puede estar vacía
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="loginUsuario()">Entrar</button>
+            <div class="alert alert-danger mt-2" <% if (errorLogin == false) {%>hidden<% } %> %>>Email o contraseña incorrectos</div>
+          </form>
+
+    </main>
+
+    <%- include('footer', {}); %>
+</body>
+
+
+</html>

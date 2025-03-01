@@ -40,7 +40,19 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/register/">Registrarse</a>
                         </li>
-                    <% } %>
+                    <% }
+                        else {
+                            for (let usuario of parametrosComunes['listaUsuarios']){
+                                if (usuario['_id'].toString()== parametrosComunes['usuarioActivo']){ %>                        
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/logout/"><%= usuario['nombre']%> (cerrar sesion)</a>
+                                        </li>
+                                <% 
+                                    break;
+                                }
+                            }
+                        }
+                     %>
                 </ul>
             </div>
         </div>
