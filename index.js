@@ -67,7 +67,6 @@ async function leerDatosComunes (req){
     },
   ]
   let listaUsuarios = await client.db("ASWGrupo1").collection('usuarios').find({}).toArray();
-  console.log(listaUsuarios);
   let listaPremios = [];
   let usuarioActivo = autenticarUsuario(req);
   parametrosComunes = {'listaPeliculas':listaPeliculas, 'listaUsuarios':listaUsuarios, 'listaPremios':listaPremios, 'usuarioActivo':usuarioActivo};
@@ -162,9 +161,9 @@ aplicacion.post('/login', async (req, res) => {
     });
   }
 })
-aplicacion.post('/logout', async (req, res) => {
-  // Procesar el logout
-  res.send('adios');
+aplicacion.get('/logout', async (req, res) => {
+  res.clearCookie("ASWGrupo1");
+  res.redirect('/')
 })
 aplicacion.get('/prueba', async (req, res) => { // Una ruta para ejecutar peticiones de prueba a la base de datos. Habra que quitarla al final
   //resultado = await client.db("ASWGrupo1").collection('usuarios').drop()
