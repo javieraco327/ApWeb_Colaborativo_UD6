@@ -168,8 +168,8 @@ aplicacion.get('/logout', async (req, res) => {
   res.redirect('/')
 })
 aplicacion.get('/prueba', async (req, res) => { // Una ruta para ejecutar peticiones de prueba a la base de datos. Habra que quitarla al final
-  //resultado = await client.db("ASWGrupo1").collection('usuarios').drop()
-  res.send('listo');
+  let resultado = await client.db("ASWGrupo1").collection('usuarios').find({}).toArray();
+  res.send(resultado)
 })
 
 
