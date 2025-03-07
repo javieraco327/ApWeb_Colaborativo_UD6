@@ -1,0 +1,59 @@
+const express = require('express');
+const router = express.Router();
+const Premio = require('../models/Premio');
+
+// Obtener todos los premios
+router.get('/', async (req, res) => {
+    try {
+        const premios = await Premio.find();
+        res.json(premios);
+    } catch (error) {
+        res.status(500).json({ error: "Error al obtener los premios" });
+    }
+});
+
+// Obtener un premio por ID
+router.get('/:id', async (req, res) => {
+    try {
+        const premio = await Premio.findById(req.params.id);
+        if (!premio) return res.status(404).json({ error: "Premio no encontrado" });
+        res.json(premio);
+    } catch (error) {
+        res.status(500).json({ error: "Error al obtener el premio" });
+    }
+});
+
+// Crear un nuevo premio
+router.post('/', async (req, res) => {
+    try {
+        const nuevoPremio = new Premio(req.body);
+        await nuevoPremio.save();
+        res.status(201).json(nuevoPremio);
+    } catch (error) {
+        res.status(400).json({ error: "Error al crear el premio" });
+    }
+});
+
+// Actualizar un premio por ID
+router.put('/:id', async (req, res) => {
+    try {
+        const premioActualizado = await Premio.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!premioActualizado) return res.status(404).json({ error: "Premio no encontrado" });
+        res.json(premioActualizado);
+    } catch (error) {
+        res.status(500).json({ error: "Error al actualizar el premio" });
+    }
+});
+
+// Eliminar un premio por ID
+router.delete('/:id', async (req, res) => {
+    try {
+        const premioEliminado = await Premio.findByIdAndDelete(req.params.id);
+        if (!premioEliminado) return res.status(404).json({ error: "Premio no encontrado" });
+        res.json({ mensaje: "Premio eliminado correctamente" });
+    } catch (error) {
+        res.status(500).json({ error: "Error al eliminar el premio" });
+    }
+});
+
+module.exports = router;
