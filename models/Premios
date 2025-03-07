@@ -1,0 +1,10 @@
+const mongoose = require('mongoose');
+
+const PremioSchema = new mongoose.Schema({
+    nombre: { type: String, required: true },
+    categoria: { type: String, required: true },
+    anio: { type: Number, required: true },
+    peliculaGanadora: { type: String, required: true }
+});
+
+module.exports = mongoose.model('Premio', PremioSchema);
